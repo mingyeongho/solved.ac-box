@@ -14,18 +14,7 @@ pnpm install
 
 # Run in development mode (executes TypeScript directly)
 pnpm dev
-
-# Build for production (compile TS → bundle with ncc → minify → clean)
-pnpm build
 ```
-
-The build process:
-1. Compiles TypeScript to JavaScript in `dist/`
-2. Bundles with Vercel ncc (includes all dependencies in a single file)
-3. Minifies the output
-4. Removes intermediate files, keeping only `dist/index.js`
-
-**Note:** The `dist/` directory is in `.gitignore` and should not be committed. GitHub Actions runs `pnpm dev` (tsx directly) rather than using the built output.
 
 ## Architecture
 
