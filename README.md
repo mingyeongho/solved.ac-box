@@ -1,6 +1,6 @@
 <p align="center">
   <h3 align="center">📌✨solved.ac-box</h3>
-  <p align="center">브론즈부터 루비까지 💎, 당신의 solved.ac 티어를 한눈에</p>
+  <p align="center">브론즈부터 마스터까지 👑, 당신의 solved.ac 티어를 한눈에</p>
 </p>
 
 <p align="center">
