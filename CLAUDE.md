@@ -15,11 +15,15 @@ pnpm install
 # Run in development mode (executes TypeScript directly)
 pnpm dev
 
-# Build TypeScript to JavaScript
+# Build for production (compile TS → bundle with ncc → minify → clean)
 pnpm build
 ```
 
-Note: The build script in package.json is incomplete (ends with "tsc && "). This may need correction if a full build process is required.
+The build process:
+1. Compiles TypeScript to JavaScript in `dist/`
+2. Bundles with Vercel ncc (includes all dependencies in a single file)
+3. Minifies the output
+4. Removes intermediate files, keeping only `dist/index.js`
 
 ## Architecture
 
@@ -54,10 +58,25 @@ The codebase follows a simple three-file architecture:
 
 ### Environment Variables Required
 
-The application expects these variables in `.env`:
+The application expects these variables:
 - `USERNAME`: solved.ac username to fetch stats for
 - `GH_TOKEN`: GitHub personal access token with gist write permissions
 - `GIST_ID`: ID of the gist to update
+
+For local development, create a `.env` file. For GitHub Actions, these are set via GitHub Secrets.
+
+### GitHub Actions Automation
+
+The repository includes a workflow (`.github/workflows/schedule.yml`) that:
+- Runs daily at UTC 15:00 (Korean midnight)
+- Can be manually triggered via workflow_dispatch
+- Requires USERNAME, GH_TOKEN, and GIST_ID to be set as repository secrets
+- Uses pnpm 10.22.0 and Node.js 20
+
+When users fork this repository, they must:
+1. Enable GitHub Actions in the forked repo (disabled by default)
+2. Add the three required secrets in Settings > Secrets
+3. GitHub Actions will NOT copy secrets from the original repo
 
 ### TypeScript Configuration
 

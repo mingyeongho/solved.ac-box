@@ -10,7 +10,8 @@
     "pinned-gist"
   ],
   "scripts": {
-    "dev": "npx tsx src/index.ts"
+    "dev": "npx tsx src/index.ts",
+    "build": "tsc && ncc build dist/index.js --minify && find dist/ -type f -not -name 'index.js' -delete"
   },
   "engines": {
     "node": ">=20"
@@ -18,6 +19,7 @@
   "packageManager": "pnpm@10.22.0",
   "devDependencies": {
     "@types/node": "^25.0.3",
+    "@vercel/ncc": "^0.38.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
