@@ -1,0 +1,28 @@
+{
+  "name": "solved.ac-box",
+  "version": "1.0.0",
+  "description": "From Bronze to Ruby 💎, Check your solved.ac tier in one neat box",
+  "author": "mingyeongho",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "solved.ac",
+    "pinned-gist"
+  ],
+  "scripts": {
+    "dev": "npx tsx src/index.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.22.0",
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@octokit/rest": "^22.0.1",
+    "dotenv": "^17.2.3"
+  }
+}
