@@ -1,7 +1,14 @@
 import { Octokit } from "@octokit/rest";
 import solvedacQuery from "./queries";
 import { config } from "dotenv";
-import { TIERS } from "./common";
+import {
+  generateBarChart,
+  getCurrTierInfo,
+  getNextTierInfo,
+  getPercent,
+  between,
+} from "./utils";
+import { FULL_WIDTH } from "./common";
 
 /**
  * get environment variable
@@ -10,7 +17,7 @@ config({ path: [".env"] });
 
 (async () => {
   /**
-   * First, get user info in solved.ac
+   * First, get solved.ac user info
    */
   const res = await solvedacQuery({
     username: `${process.env.USERNAME}`,
@@ -22,25 +29,42 @@ config({ path: [".env"] });
 
   /**
    * Second, create contents
+   *
+   * first line. Tier and rating, points remaining until next tier
+   *
+   * second line. Bar chart
+   *
+   * third line. Bio
+   *
+   * fourth line. Solved count, rank
    */
-  const lines = [
-    {
-      label: "🏷️ Description",
-      value: res.bio,
-    },
-    {
-      label: `📈 Rating`,
-      value: res.rating,
-    },
-    {
-      label: `✅ Solved`,
-      value: res.solvedCount,
-    },
-  ].reduce((acc, { label, value }) => {
-    const line = [`${label}: ${value}`];
+  const { bio, tier, solvedCount, rating, rank } = res;
+  const { label, startRating } = getCurrTierInfo(tier);
+  const nextTierInfo = getNextTierInfo(tier);
+  const percent = getPercent(
+    startRating,
+    nextTierInfo?.startRating ?? 3_000,
+    rating
+  );
 
-    return [...acc, line.join(" ")];
-  }, [] as string[]);
+  const lines = [
+    `${
+      !nextTierInfo
+        ? `${label}, ${rating}p`
+        : between(
+            `${label}, ${rating}`,
+            `${nextTierInfo.label} 승급까지 ${
+              rating - nextTierInfo.startRating
+            }p`,
+            FULL_WIDTH - 2
+          )
+    }`,
+    generateBarChart(percent, FULL_WIDTH),
+    `${bio}`,
+    `${"✅ " + `문제 해결`.padEnd(5) + `${solvedCount}문제`.padStart(14)}    ${
+      "📈 " + `순위`.padEnd(5) + `${rank}등`.padStart(14)
+    }`,
+  ];
 
   /**
    * Finally, write into gist
@@ -63,7 +87,7 @@ config({ path: [".env"] });
     gist_id: `${process.env.GIST_ID}`,
     files: {
       [filename]: {
-        filename: `${TIERS[res.tier]}, ${res.rating}`,
+        filename: `[ Solved.ac Status ]`,
         content: lines.join("\n"),
       },
     },
