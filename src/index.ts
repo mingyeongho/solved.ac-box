@@ -54,7 +54,7 @@ config({ path: [".env"] });
     const right = `${nextTierInfo.label} 승급까지 ${
       rating - nextTierInfo.startRating
     }p`;
-    return left.padEnd(FULL_WIDTH - 1 - right.length, " ") + right;
+    return left.padEnd(FULL_WIDTH - 2 - right.length, " ") + right;
   };
 
   const lines = [
